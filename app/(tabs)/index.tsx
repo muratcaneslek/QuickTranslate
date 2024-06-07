@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import * as Speech from "expo-speech";
-import { Ionicons, MaterialIcons, FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import LanguagePicker from "../../components/LanguagePicker";
 
