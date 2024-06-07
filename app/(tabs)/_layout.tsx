@@ -46,6 +46,8 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "",
+          headerTitle: "Language Translator",
+          headerShown: true,
           tabBarIcon: () => (
             <View style={styles.middleIcon}>
               <MaterialCommunityIcons
@@ -79,13 +81,13 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
   middleButton: {
-    top: -10,
+    top: -20,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 50,
     backgroundColor: Colors.light.tint,
-    height: 50,
-    width: 50,
+    height: 60,
+    width: 60,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -98,8 +100,8 @@ const styles = StyleSheet.create({
   middleIcon: {
     justifyContent: "center",
     alignItems: "center",
-    height: 60,
-    width: 60,
+    height: 55,
+    width: 55,
     borderRadius: 50,
     backgroundColor: Colors.light.tint,
   },
