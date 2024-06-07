@@ -5,10 +5,10 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Share,
 } from "react-native";
 import * as Speech from "expo-speech";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { Share } from "react-native";
 import * as Clipboard from "expo-clipboard";
 
 export default function HomeScreen() {
