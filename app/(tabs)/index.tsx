@@ -12,9 +12,11 @@ import * as Speech from "expo-speech";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import LanguagePicker from "../../components/LanguagePicker";
+import axios from "axios";
+import { API_KEY, API_URL } from "@env";
 
 export default function HomeScreen() {
-  const [text, setText] = useState("merhaba");
+  const [text, setText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [fromLanguage, setFromLanguage] = useState("English");
   const [toLanguage, setToLanguage] = useState("Spanish");
@@ -49,9 +51,43 @@ export default function HomeScreen() {
     }
   }, [fromLanguage, toLanguage]);
 
+  const translateText = async () => {
+    try {
+      const response = await axios.post(`${API_URL}+${API_KEY}`, {
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: `Translate the following text from ${fromLanguage} to ${toLanguage}: ${text}`,
+              },
+            ],
+          },
+        ],
+      });
+
+      if (response.status === 200) {
+        setTranslatedText(response.data.candidates[0].content.parts[0].text);
+      } else {
+        console.error(
+          "Failed to get translation:",
+          response.status,
+          response.statusText
+        );
+        return null;
+      }
+    } catch (error) {
+      Alert.alert(
+        "Warning",
+        "Failed to translate text. Please try again later.."
+      );
+      console.log(error);
+      return null;
+    }
+  };
+
   const handleTranslate = () => {
-    const fakeTranslation = "Hello";
-    setTranslatedText(fakeTranslation);
+    translateText();
   };
 
   const handleSpeech = (text: string) => {
