@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -21,6 +21,7 @@ export default function HomeScreen() {
   const [translatedText, setTranslatedText] = useState("");
   const [fromLanguage, setFromLanguage] = useState("English");
   const [toLanguage, setToLanguage] = useState("Spanish");
+  const inputRef = useRef<TextInput | null>(null);
 
   const languages = [
     { label: "English", value: "English", flag: "GB" },
@@ -56,7 +57,6 @@ export default function HomeScreen() {
     const initializeDatabase = () => {
       try {
         init();
-        console.log("Database initialized");
       } catch (error) {
         console.log("Initializing db failed.", error);
       }
@@ -104,6 +104,9 @@ export default function HomeScreen() {
 
   const handleTranslate = () => {
     translateText();
+    if (inputRef.current) {
+      inputRef.current.blur();
+    }
   };
 
   const handleSpeech = (text: string) => {
@@ -183,6 +186,7 @@ export default function HomeScreen() {
           placeholder={text}
           value={text}
           onChangeText={setText}
+          ref={inputRef}
         />
         <View style={styles.translateButtonContainer}>
           <TouchableOpacity

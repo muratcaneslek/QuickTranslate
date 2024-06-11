@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
-import { fetchTranslations } from "../../database/database";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { fetchTranslations, deleteTranslation } from "../../database/database";
+import { Entypo } from "@expo/vector-icons";
 
 type Translation = {
   id: number;
@@ -8,6 +15,13 @@ type Translation = {
   translatedText: string;
   fromLanguage: string;
   toLanguage: string;
+};
+
+const truncateText = (text: string, maxLength: number) => {
+  if (text.length > maxLength) {
+    return text.substring(0, maxLength - 3) + "...";
+  }
+  return text;
 };
 
 export default function History() {
@@ -29,9 +43,26 @@ export default function History() {
     loadTranslations();
   }, [translations]);
 
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteTranslation(id);
+      setTranslations(translations.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Error deleting translation:", error);
+    }
+  };
+
   const renderCard = ({ item }: { item: Translation }) => (
     <View style={styles.card}>
-      <Text style={styles.originalText}>{item.originalText}</Text>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text style={styles.originalText}>
+          {truncateText(item.originalText, 30)}{" "}
+        </Text>
+        <TouchableOpacity onPress={() => handleDelete(item.id)}>
+          <Entypo name="trash" size={20} color="black" />
+        </TouchableOpacity>
+      </View>
+
       <Text style={styles.translatedText}>{item.translatedText}</Text>
       <Text style={styles.languageInfo}>
         Translated from {item.fromLanguage} to {item.toLanguage}
