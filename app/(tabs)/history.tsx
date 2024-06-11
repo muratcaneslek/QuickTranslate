@@ -27,10 +27,10 @@ export default function History() {
     };
 
     loadTranslations();
-  }, []);
+  }, [translations]);
 
-  const renderItem = ({ item }: { item: Translation }) => (
-    <View style={styles.translationItem}>
+  const renderCard = ({ item }: { item: Translation }) => (
+    <View style={styles.card}>
       <Text style={styles.originalText}>{item.originalText}</Text>
       <Text style={styles.translatedText}>{item.translatedText}</Text>
       <Text style={styles.languageInfo}>
@@ -46,7 +46,7 @@ export default function History() {
       ) : (
         <FlatList
           data={translations}
-          renderItem={renderItem}
+          renderItem={renderCard}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContent}
           ListEmptyComponent={
@@ -61,28 +61,40 @@ export default function History() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#fff",
+    backgroundColor: "#f0f0f0",
+    paddingHorizontal: 20,
+    paddingTop: 20,
   },
   listContent: {
-    flexGrow: 1,
+    paddingBottom: 20,
   },
-  translationItem: {
-    marginBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    paddingBottom: 5,
+  card: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 5,
   },
   originalText: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "bold",
+    marginBottom: 10,
+    color: "#333",
   },
   translatedText: {
-    fontSize: 14,
+    fontSize: 16,
+    marginBottom: 10,
     color: "#555",
   },
   languageInfo: {
-    fontSize: 12,
+    fontSize: 14,
     color: "#888",
   },
   noData: {

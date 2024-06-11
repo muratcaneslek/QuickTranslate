@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Colors } from "@/constants/Colors";
@@ -9,33 +9,37 @@ import {
   StyleSheet,
   TouchableOpacity,
   StatusBar,
-  Alert,
   Text,
 } from "react-native";
+import { clearAllTranslations, fetchTranslations } from "@/database/database";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const [confirmationVisible, setConfirmationVisible] = useState(false);
 
-  const handleClearHistory = () => {
-    // Geçmişi sıfırla fonksiyonu buraya yazılacak
-    Alert.alert("Clear History", "Are you sure you want to clear history?", [
-      {
-        text: "Cancel",
-        style: "cancel",
-      },
-      {
-        text: "Clear",
-        onPress: () => {
-          // Geçmişi sıfırla işlemi buraya gelecek
-          console.log("History cleared!");
-        },
-      },
-    ]);
+  const handleClearHistory = async () => {
+    try {
+      await clearAllTranslations();
+      console.log("History cleared!");
+      setConfirmationVisible(false);
+      console.log(fetchTranslations());
+    } catch (error) {
+      console.error("Error clearing history:", error);
+    }
   };
 
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor="#003366" />
+      <ConfirmationModal
+        visible={confirmationVisible}
+        onClose={() => setConfirmationVisible(false)}
+        onConfirm={handleClearHistory}
+        modalText="Are you sure you want to clear history?"
+        cancelButtonText="Cancel"
+        confirmButtonText="Clear"
+      />
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
@@ -66,7 +70,7 @@ export default function TabLayout() {
             headerRight: () => (
               <TouchableOpacity
                 style={styles.clearButton}
-                onPress={handleClearHistory}
+                onPress={() => setConfirmationVisible(true)}
               >
                 <Text style={styles.clearAll}>Clear all</Text>
               </TouchableOpacity>
@@ -148,7 +152,7 @@ const styles = StyleSheet.create({
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowRadius: 3,
     elevation: 5,
   },
   middleIcon: {
