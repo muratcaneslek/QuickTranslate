@@ -52,4 +52,14 @@ export const fetchTranslations = async () => {
   }
 };
 
+export const clearAllTranslations = async () => {
+  try {
+    const db = await dbPromise;
+    await db.execAsync("DELETE FROM translations;");
+    console.log("Translations cleared!");
+  } catch (error) {
+    console.error("Clearing translations failed.", error);
+  }
+};
+
 export default dbPromise;
