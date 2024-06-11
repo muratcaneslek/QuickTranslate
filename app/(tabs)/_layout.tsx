@@ -21,7 +21,6 @@ export default function TabLayout() {
   const handleClearHistory = async () => {
     try {
       await clearAllTranslations();
-      console.log("History cleared!");
       setConfirmationVisible(false);
       console.log(fetchTranslations());
     } catch (error) {

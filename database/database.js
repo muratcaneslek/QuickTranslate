@@ -16,7 +16,6 @@ export const init = async () => {
         timestamp TEXT NOT NULL
       );
     `);
-    console.log("Database initialized");
   } catch (error) {
     console.error("Initializing db failed.", error);
   }
@@ -35,7 +34,6 @@ export const insertTranslation = async (
       "INSERT INTO translations (originalText, translatedText, fromLanguage, toLanguage, timestamp) VALUES (?, ?, ?, ?, ?);",
       [originalText, translatedText, fromLanguage, toLanguage, timestamp]
     );
-    console.log("Translation inserted");
   } catch (error) {
     console.error("Inserting translation failed.", error);
   }
@@ -56,9 +54,18 @@ export const clearAllTranslations = async () => {
   try {
     const db = await dbPromise;
     await db.execAsync("DELETE FROM translations;");
-    console.log("Translations cleared!");
   } catch (error) {
     console.error("Clearing translations failed.", error);
+  }
+};
+
+export const deleteTranslation = async (id) => {
+  try {
+    const db = await dbPromise;
+    await db.runAsync("DELETE FROM translations WHERE id = ?;", [id]);
+  } catch (error) {
+    console.error("Deleting translation failed.", error);
+    throw new Error("Error deleting translation");
   }
 };
 
