@@ -14,6 +14,7 @@ import * as Clipboard from "expo-clipboard";
 import LanguagePicker from "../../components/LanguagePicker";
 import axios from "axios";
 import { API_KEY, API_URL } from "@env";
+import { init, insertTranslation } from "../../database/database";
 
 export default function HomeScreen() {
   const [text, setText] = useState("");
@@ -51,6 +52,19 @@ export default function HomeScreen() {
     }
   }, [fromLanguage, toLanguage]);
 
+  useEffect(() => {
+    const initializeDatabase = () => {
+      try {
+        init();
+        console.log("Database initialized");
+      } catch (error) {
+        console.log("Initializing db failed.", error);
+      }
+    };
+
+    initializeDatabase();
+  }, []);
+
   const translateText = async () => {
     try {
       const response = await axios.post(`${API_URL}+${API_KEY}`, {
@@ -67,7 +81,9 @@ export default function HomeScreen() {
       });
 
       if (response.status === 200) {
-        setTranslatedText(response.data.candidates[0].content.parts[0].text);
+        const translated = response.data.candidates[0].content.parts[0].text;
+        setTranslatedText(translated);
+        insertTranslation(text, translated, fromLanguage, toLanguage);
       } else {
         console.error(
           "Failed to get translation:",
