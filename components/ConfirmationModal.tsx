@@ -42,7 +42,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               <ConfirmationButton
                 text={confirmButtonText}
                 onPress={onConfirm}
-                variant="primary"
+                variant="orange"
               />
             </View>
           </View>

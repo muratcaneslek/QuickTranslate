@@ -8,7 +8,7 @@ import {
 
 type ConfirmationButtonProps = {
   text: string;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "secondary" | "orange";
   size?: "small" | "medium" | "large";
   onPress: () => void;
 };
@@ -52,6 +52,9 @@ const styles = StyleSheet.create({
   },
   secondary: {
     backgroundColor: "#6c757d",
+  },
+  orange: {
+    backgroundColor: "#FF6500",
   },
   small: {
     paddingVertical: 8,
