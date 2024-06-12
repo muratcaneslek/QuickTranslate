@@ -59,7 +59,7 @@ export default function History() {
           {truncateText(item.originalText, 30)}{" "}
         </Text>
         <TouchableOpacity onPress={() => handleDelete(item.id)}>
-          <Entypo name="trash" size={20} color="black" />
+          <Entypo name="trash" size={20} color="#FF6500" />
         </TouchableOpacity>
       </View>
 

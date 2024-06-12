@@ -13,7 +13,8 @@ export const init = async () => {
         translatedText TEXT NOT NULL,
         fromLanguage TEXT NOT NULL,
         toLanguage TEXT NOT NULL,
-        timestamp TEXT NOT NULL
+        timestamp TEXT NOT NULL,
+        isFavourite BOOLEAN DEFAULT 0
       );
     `);
   } catch (error) {
@@ -25,17 +26,39 @@ export const insertTranslation = async (
   originalText,
   translatedText,
   fromLanguage,
-  toLanguage
+  toLanguage,
+  isFavorite = false
 ) => {
   const timestamp = new Date().toISOString();
   try {
     const db = await dbPromise;
     await db.runAsync(
-      "INSERT INTO translations (originalText, translatedText, fromLanguage, toLanguage, timestamp) VALUES (?, ?, ?, ?, ?);",
-      [originalText, translatedText, fromLanguage, toLanguage, timestamp]
+      "INSERT INTO translations (originalText, translatedText, fromLanguage, toLanguage, timestamp, isFavorite) VALUES (?, ?, ?, ?, ?, ?);",
+      [
+        originalText,
+        translatedText,
+        fromLanguage,
+        toLanguage,
+        timestamp,
+        isFavorite ? 1 : 0,
+      ]
     );
   } catch (error) {
     console.error("Inserting translation failed.", error);
+  }
+};
+
+export const toggleFavoriteTranslation = async (id, isFavorite) => {
+  try {
+    const db = await dbPromise;
+    await db.runAsync("UPDATE translations SET isFavorite = ? WHERE id = ?;", [
+      isFavorite ? 1 : 0,
+      id,
+    ]);
+    console.log("Translation favorite status updated");
+  } catch (error) {
+    console.error("Updating translation favorite status failed.", error);
+    throw new Error("Error updating translation favorite status");
   }
 };
 
@@ -66,6 +89,19 @@ export const deleteTranslation = async (id) => {
   } catch (error) {
     console.error("Deleting translation failed.", error);
     throw new Error("Error deleting translation");
+  }
+};
+
+export const fetchFavouriteTranslations = async () => {
+  try {
+    const db = await dbPromise;
+    const result = await db.getAllAsync(
+      "SELECT * FROM translations WHERE isFavourite = 1;"
+    );
+    return result;
+  } catch (error) {
+    console.error("Fetching favourite translations failed.", error);
+    return [];
   }
 };
 
