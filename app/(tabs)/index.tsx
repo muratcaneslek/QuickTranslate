@@ -9,18 +9,29 @@ import {
   Alert,
 } from "react-native";
 import * as Speech from "expo-speech";
-import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  FontAwesome,
+  Ionicons,
+  MaterialIcons,
+  AntDesign,
+} from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import LanguagePicker from "../../components/LanguagePicker";
 import axios from "axios";
 import { API_KEY, API_URL } from "@env";
-import { init, insertTranslation } from "../../database/database";
+import {
+  init,
+  insertTranslation,
+  toggleFavoriteTranslation,
+  getLastTranslationId,
+} from "../../database/database";
 
 export default function HomeScreen() {
   const [text, setText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [fromLanguage, setFromLanguage] = useState("English");
   const [toLanguage, setToLanguage] = useState("Spanish");
+  const [favorites, setFavorites] = useState<Boolean>(false);
   const inputRef = useRef<TextInput | null>(null);
 
   const languages = [
@@ -109,6 +120,11 @@ export default function HomeScreen() {
     }
   };
 
+  const handleClear = () => {
+    setText("");
+    setTranslatedText("");
+  };
+
   const handleSpeech = (text: string) => {
     Speech.speak(text);
   };
@@ -139,6 +155,15 @@ export default function HomeScreen() {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleFavourite = () => {
+    if (!translatedText) {
+      return;
+    }
+    const lastID = getLastTranslationId();
+    setFavorites(true);
+    toggleFavoriteTranslation(lastID, favorites);
   };
 
   return (
@@ -175,7 +200,7 @@ export default function HomeScreen() {
               />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={() => setText("")}>
+          <TouchableOpacity onPress={handleClear}>
             <Text style={styles.clearText}>X</Text>
           </TouchableOpacity>
         </View>
@@ -187,6 +212,7 @@ export default function HomeScreen() {
           value={text}
           onChangeText={setText}
           ref={inputRef}
+          cursorColor={"red"}
         />
         <View style={styles.translateButtonContainer}>
           <TouchableOpacity
@@ -215,6 +241,13 @@ export default function HomeScreen() {
           </TouchableOpacity>
           <TouchableOpacity onPress={handleShare}>
             <MaterialIcons name="share" size={24} color="black" />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleFavourite}>
+            <AntDesign
+              name={favorites ? "star" : "staro"}
+              size={24}
+              style={favorites ? styles.clicked : styles.nonClicked}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -302,5 +335,11 @@ const styles = StyleSheet.create({
     bottom: 10,
     right: 10,
     gap: 10,
+  },
+  clicked: {
+    color: "#FF6500",
+  },
+  nonClicked: {
+    color: "black",
   },
 });
