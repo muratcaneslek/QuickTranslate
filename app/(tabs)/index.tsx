@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Share,
   Alert,
+  ScrollView,
 } from "react-native";
 import * as Speech from "expo-speech";
 import {
@@ -25,6 +26,7 @@ import {
   toggleFavoriteTranslation,
   getLastTranslationId,
 } from "../../database/database";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function HomeScreen() {
   const [text, setText] = useState("");
@@ -75,6 +77,14 @@ export default function HomeScreen() {
 
     initializeDatabase();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setText("");
+      setTranslatedText("");
+      setFavorites(false);
+    }, [])
+  );
 
   const translateText = async () => {
     try {
@@ -157,13 +167,18 @@ export default function HomeScreen() {
     }
   };
 
-  const handleFavourite = () => {
+  const handleFavourite = async () => {
     if (!translatedText) {
       return;
     }
-    const lastID = getLastTranslationId();
-    setFavorites(true);
-    toggleFavoriteTranslation(lastID, favorites);
+    try {
+      const lastID = await getLastTranslationId();
+      console.log("Last ID:", lastID);
+      setFavorites(true);
+      toggleFavoriteTranslation(lastID, favorites);
+    } catch (error) {
+      console.error("Error getting last translation ID:", error);
+    }
   };
 
   return (
@@ -188,11 +203,46 @@ export default function HomeScreen() {
           style={styles.languagePicker}
         />
       </View>
-      <View style={styles.translationContainer}>
-        <View style={styles.translationClear}>
+      <ScrollView>
+        <View style={styles.translationContainer}>
+          <View style={styles.translationClear}>
+            <View style={styles.languageHeader}>
+              <Text style={styles.languageText}>{fromLanguage}</Text>
+              <TouchableOpacity onPress={() => handleSpeech(text)}>
+                <Ionicons
+                  style={styles.icon}
+                  name="volume-medium-outline"
+                  size={24}
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity onPress={handleClear}>
+              <Text style={styles.clearText}>X</Text>
+            </TouchableOpacity>
+          </View>
+          <TextInput
+            style={styles.textInput}
+            multiline
+            numberOfLines={4}
+            placeholder={text}
+            value={text}
+            onChangeText={setText}
+            ref={inputRef}
+            cursorColor={"red"}
+          />
+          <View style={styles.translateButtonContainer}>
+            <TouchableOpacity
+              style={styles.translateButton}
+              onPress={handleTranslate}
+            >
+              <Text style={styles.translateButtonText}>Translate</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View style={styles.translationContainer}>
           <View style={styles.languageHeader}>
-            <Text style={styles.languageText}>{fromLanguage}</Text>
-            <TouchableOpacity onPress={() => handleSpeech(text)}>
+            <Text style={styles.languageText}>{toLanguage}</Text>
+            <TouchableOpacity onPress={() => handleSpeech(translatedText)}>
               <Ionicons
                 style={styles.icon}
                 name="volume-medium-outline"
@@ -200,57 +250,24 @@ export default function HomeScreen() {
               />
             </TouchableOpacity>
           </View>
-          <TouchableOpacity onPress={handleClear}>
-            <Text style={styles.clearText}>X</Text>
-          </TouchableOpacity>
+          <Text style={{ paddingTop: 10 }}>{translatedText}</Text>
+          <View style={styles.actionButtons}>
+            <TouchableOpacity onPress={() => handleCopy(translatedText)}>
+              <MaterialIcons name="content-copy" size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleShare}>
+              <MaterialIcons name="share" size={24} color="black" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleFavourite}>
+              <AntDesign
+                name={favorites ? "star" : "staro"}
+                size={24}
+                style={favorites ? styles.clicked : styles.nonClicked}
+              />
+            </TouchableOpacity>
+          </View>
         </View>
-        <TextInput
-          style={styles.textInput}
-          multiline
-          numberOfLines={4}
-          placeholder={text}
-          value={text}
-          onChangeText={setText}
-          ref={inputRef}
-          cursorColor={"red"}
-        />
-        <View style={styles.translateButtonContainer}>
-          <TouchableOpacity
-            style={styles.translateButton}
-            onPress={handleTranslate}
-          >
-            <Text style={styles.translateButtonText}>Translate</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.translationContainer}>
-        <View style={styles.languageHeader}>
-          <Text style={styles.languageText}>{toLanguage}</Text>
-          <TouchableOpacity onPress={() => handleSpeech(translatedText)}>
-            <Ionicons
-              style={styles.icon}
-              name="volume-medium-outline"
-              size={24}
-            />
-          </TouchableOpacity>
-        </View>
-        <Text style={{ paddingTop: 10 }}>{translatedText}</Text>
-        <View style={styles.actionButtons}>
-          <TouchableOpacity onPress={() => handleCopy(translatedText)}>
-            <MaterialIcons name="content-copy" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleShare}>
-            <MaterialIcons name="share" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleFavourite}>
-            <AntDesign
-              name={favorites ? "star" : "staro"}
-              size={24}
-              style={favorites ? styles.clicked : styles.nonClicked}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }

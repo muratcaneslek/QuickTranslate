@@ -43,6 +43,8 @@ export const insertTranslation = async (
         isFavorite ? 1 : 0,
       ]
     );
+
+    console.log("Translation inserted successfully");
   } catch (error) {
     console.error("Inserting translation failed.", error);
   }
