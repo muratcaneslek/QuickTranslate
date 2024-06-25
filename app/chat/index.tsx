@@ -37,17 +37,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#FFFFFF", // Arka plan rengi
+    backgroundColor: "#FFFFFF",
   },
   text: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#003366", // Başlık rengi
+    color: "#003366",
     marginTop: 20,
   },
   subtext: {
     fontSize: 18,
-    color: "#666666", // Alt metin rengi
+    color: "#666666",
     marginBottom: 20,
   },
 });
