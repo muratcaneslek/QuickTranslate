@@ -18,9 +18,9 @@ Welcome to the **QuickTranslate App**, a mobile application designed to help you
     <th>Favorite Screen</th>
   </tr>
   <tr>
-    <td><img src="https://github.com/muratcaneslek/QuickTranslate/assets/101694676/b48cf21a-c5eb-44af-bbfd-5bfc9ce5655a" width="350" height="650"/></td>
-    <td><img src="https://github.com/muratcaneslek/QuickTranslate/assets/101694676/24104e70-ba1a-41e3-9b34-532d9c5b2e8d" width="350" height="650"/></td>
-    <td><img src="https://github.com/muratcaneslek/QuickTranslate/assets/101694676/e256bcb0-5af5-4ce6-9d39-a1239737bb51" width="350" height="650"/></td>
+    <td><img src="https://github.com/muratcaneslek/QuickTranslate/assets/101694676/b48cf21a-c5eb-44af-bbfd-5bfc9ce5655a" width="325" height="650"/></td>
+    <td><img src="https://github.com/muratcaneslek/QuickTranslate/assets/101694676/24104e70-ba1a-41e3-9b34-532d9c5b2e8d" width="325" height="650"/></td>
+    <td><img src="https://github.com/muratcaneslek/QuickTranslate/assets/101694676/e256bcb0-5af5-4ce6-9d39-a1239737bb51" width="325" height="650"/></td>
   </tr>
 </table>
 
