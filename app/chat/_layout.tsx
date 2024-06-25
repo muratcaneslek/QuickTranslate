@@ -12,7 +12,6 @@ import { StyleSheet } from "react-native";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
@@ -37,10 +36,14 @@ export default function RootLayout() {
         <Stack.Screen
           name="index"
           options={{
-            headerTitle: "Chat",
-            headerStyle: styles.headerStyle,
-            headerTitleStyle: styles.headerTitleStyle,
-            headerShown: true,
+            title: "Chat",
+            headerStyle: {
+              backgroundColor: "#003366",
+            },
+            headerTintColor: "#FFFFFF",
+            headerTitleStyle: {
+              fontWeight: "500",
+            },
           }}
         />
       </Stack>
