@@ -14,7 +14,7 @@ export const init = async () => {
         fromLanguage TEXT NOT NULL,
         toLanguage TEXT NOT NULL,
         timestamp TEXT NOT NULL,
-        isFavourite BOOLEAN DEFAULT 0
+        isFavorite BOOLEAN DEFAULT 0
       );
     `);
   } catch (error) {
@@ -43,6 +43,8 @@ export const insertTranslation = async (
         isFavorite ? 1 : 0,
       ]
     );
+
+    console.log("Translation inserted successfully");
   } catch (error) {
     console.error("Inserting translation failed.", error);
   }
@@ -96,12 +98,25 @@ export const fetchFavouriteTranslations = async () => {
   try {
     const db = await dbPromise;
     const result = await db.getAllAsync(
-      "SELECT * FROM translations WHERE isFavourite = 1;"
+      "SELECT * FROM translations WHERE isFavorite = 1;"
     );
     return result;
   } catch (error) {
     console.error("Fetching favourite translations failed.", error);
     return [];
+  }
+};
+
+export const getLastTranslationId = async () => {
+  try {
+    const db = await dbPromise;
+    const result = await db.getAsync(
+      "SELECT id FROM translations ORDER BY id DESC LIMIT 1;"
+    );
+    return result ? result.id : null;
+  } catch (error) {
+    console.error("Fetching last inserted translation ID failed.", error);
+    return null;
   }
 };
 

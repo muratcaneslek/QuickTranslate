@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { Tabs, router } from "expo-router";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { clearAllTranslations, fetchTranslations } from "@/database/database";
 import ConfirmationModal from "@/components/ConfirmationModal";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -91,6 +92,14 @@ export default function TabLayout() {
             headerStyle: styles.headerStyle,
             headerTitleStyle: styles.headerTitleStyle,
             headerShown: true,
+            headerRight: () => (
+              <TouchableOpacity
+                style={styles.clearButton}
+                onPress={() => router.push("/chat")}
+              >
+                <AntDesign name="wechat" size={24} color="white" />
+              </TouchableOpacity>
+            ),
             tabBarIcon: () => (
               <View style={styles.middleIcon}>
                 <MaterialCommunityIcons

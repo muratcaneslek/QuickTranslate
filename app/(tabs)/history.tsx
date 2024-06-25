@@ -6,8 +6,12 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import { fetchTranslations, deleteTranslation } from "../../database/database";
-import { Entypo } from "@expo/vector-icons";
+import {
+  fetchTranslations,
+  deleteTranslation,
+  toggleFavoriteTranslation,
+} from "../../database/database";
+import { Entypo, AntDesign } from "@expo/vector-icons";
 
 type Translation = {
   id: number;
@@ -15,6 +19,7 @@ type Translation = {
   translatedText: string;
   fromLanguage: string;
   toLanguage: string;
+  isFavorite: boolean;
 };
 
 const truncateText = (text: string, maxLength: number) => {
@@ -41,7 +46,7 @@ export default function History() {
     };
 
     loadTranslations();
-  }, [translations]);
+  }, []);
 
   const handleDelete = async (id: number) => {
     try {
@@ -49,6 +54,23 @@ export default function History() {
       setTranslations(translations.filter((item) => item.id !== id));
     } catch (error) {
       console.error("Error deleting translation:", error);
+    }
+  };
+
+  const handleFavourite = async (id: number) => {
+    try {
+      const isCurrentlyFavorited =
+        translations.find((item) => item.id === id)?.isFavorite || false;
+      const newFavoriteState = !isCurrentlyFavorited;
+
+      await toggleFavoriteTranslation(id, newFavoriteState);
+
+      const updatedTranslations = translations.map((item) =>
+        item.id === id ? { ...item, isFavorite: newFavoriteState } : item
+      );
+      setTranslations(updatedTranslations);
+    } catch (error) {
+      console.error("Error toggling favorite status:", error);
     }
   };
 
@@ -64,9 +86,18 @@ export default function History() {
       </View>
 
       <Text style={styles.translatedText}>{item.translatedText}</Text>
-      <Text style={styles.languageInfo}>
-        Translated from {item.fromLanguage} to {item.toLanguage}
-      </Text>
+      <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <Text style={styles.languageInfo}>
+          Translated from {item.fromLanguage} to {item.toLanguage}
+        </Text>
+        <TouchableOpacity onPress={() => handleFavourite(item.id)}>
+          <AntDesign
+            name={item.isFavorite ? "star" : "staro"}
+            size={24}
+            style={item.isFavorite ? styles.clicked : styles.nonClicked}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -133,5 +164,11 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     color: "#999",
+  },
+  clicked: {
+    color: "#FF6500",
+  },
+  nonClicked: {
+    color: "black",
   },
 });
