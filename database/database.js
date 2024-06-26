@@ -110,10 +110,11 @@ export const fetchFavouriteTranslations = async () => {
 export const getLastTranslationId = async () => {
   try {
     const db = await dbPromise;
-    const result = await db.getAsync(
+    const result = await db.runAsync(
       "SELECT id FROM translations ORDER BY id DESC LIMIT 1;"
     );
-    return result ? result.id : null;
+    console.log(result);
+    return result ? result.lastInsertRowId : null;
   } catch (error) {
     console.error("Fetching last inserted translation ID failed.", error);
     return null;

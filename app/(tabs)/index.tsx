@@ -175,7 +175,7 @@ export default function HomeScreen() {
       const lastID = await getLastTranslationId();
       console.log("Last ID:", lastID);
       setFavorites(true);
-      toggleFavoriteTranslation(lastID, favorites);
+      toggleFavoriteTranslation(lastID, true);
     } catch (error) {
       console.error("Error getting last translation ID:", error);
     }
