@@ -46,7 +46,7 @@ export default function History() {
     };
 
     loadTranslations();
-  }, []);
+  }, [translations]);
 
   const handleDelete = async (id: number) => {
     try {

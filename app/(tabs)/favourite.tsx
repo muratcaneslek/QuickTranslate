@@ -33,21 +33,21 @@ export default function Favourite() {
   const [loading, setLoading] = useState(true);
   const [favorites, setFavorites] = useState<Boolean>(true);
 
-  useEffect(() => {
-    const loadFavouriteTranslations = async () => {
-      try {
-        const fetchedTranslations: Translation[] =
-          await fetchFavouriteTranslations();
-        setTranslations(fetchedTranslations);
-      } catch (error) {
-        console.error("Error fetching favourite translations:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadFavouriteTranslations = async () => {
+    try {
+      const fetchedTranslations: Translation[] =
+        await fetchFavouriteTranslations();
+      setTranslations(fetchedTranslations);
+    } catch (error) {
+      console.error("Error fetching favourite translations:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     loadFavouriteTranslations();
-  }, [favorites]);
+  }, [translations, favorites]);
 
   const handleToggleFavorite = async (id: number, currentFavorite: boolean) => {
     try {
