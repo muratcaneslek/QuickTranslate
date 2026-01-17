@@ -31,7 +31,6 @@ To get this project up and running on your local machine, follow these steps:
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/your-username/language-translator-app.git
    cd language-translator-app
 
    npm install
